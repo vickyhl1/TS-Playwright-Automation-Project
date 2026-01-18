@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+npm-debug.log
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Test results
+test-results/
+playwright-report/
+playwright/.cache/
+*.zip
+
+# Environment files (will be passed as env vars)
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Git
+.git/
+.gitignore
+
+# Documentation (optional - can include if needed)
+# README.md
+# REQUIREMENTS.md
