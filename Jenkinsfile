@@ -50,14 +50,13 @@ pipeline {
                     bat 'npm cache clean --force'
                     bat 'if exist node_modules rmdir /s /q node_modules'
                     bat 'if exist package-lock.json del package-lock.json'
-                    // Install with --no-package-lock to avoid lock file issues
-                    bat 'npm install @playwright/test@1.57.0 --save-dev --no-package-lock --legacy-peer-deps'
-                    bat 'npm install @types/node@20.14.0 --save-dev --no-package-lock --legacy-peer-deps'
-                    bat 'npm install dotenv@17.2.3 --save-dev --no-package-lock --legacy-peer-deps'
-                    bat 'npm install typescript@5.9.3 --save-dev --no-package-lock --legacy-peer-deps'
-                    // Verify installation
-                    bat 'dir node_modules\\@playwright 2>nul && echo Playwright installed || echo ERROR: Playwright NOT installed'
-                    bat 'dir node_modules\\@playwright\\test 2>nul && echo @playwright/test found || echo ERROR: @playwright/test NOT found'
+                    // Install WITH package-lock.json
+                    bat 'npm install @playwright/test@1.57.0 --save-dev'
+                    bat 'npm install @types/node@20.14.0 --save-dev'
+                    bat 'npm install dotenv@17.2.3 --save-dev'
+                    bat 'npm install typescript@5.9.3 --save-dev'
+                    // Verify
+                    bat 'if exist node_modules\\@playwright\\test\\package.json (echo SUCCESS: @playwright/test installed) else (echo ERROR: @playwright/test NOT installed && exit /b 1)'
                     echo "Dependencies installed successfully"
                 }
             }
