@@ -4,7 +4,6 @@ pipeline {
     environment {
         // Base configuration
         BASE_URL = 'https://advantageonlineshopping.com/#/'
-        NODE_ENV = 'production'
         CI = 'true'
         
         // Docker registry configuration
@@ -47,22 +46,12 @@ pipeline {
             steps {
                 script {
                     echo "Installing npm dependencies..."
-                    // Check npm and node versions
-                    bat 'npm --version'
-                    bat 'node --version'
-                    // More thorough cache clean
-                    bat 'npm cache clean --force'
-                    bat 'if exist node_modules rmdir /s /q node_modules'
-                    // Check npm config
-                    bat 'npm config list'
-                    // Try installing with verbose output to see what's happening
-                    bat 'npm install --verbose 2>&1'
-                    // Verify
-                    bat 'if exist node_modules\\@playwright\\test\\package.json (echo SUCCESS) else (echo ERROR && dir node_modules 2>nul && exit /b 1)'
+                    bat 'npm ci'
                     echo "Dependencies installed successfully"
                 }
             }
         }
+
 
         stage('Install Playwright Browsers') {
             steps {
