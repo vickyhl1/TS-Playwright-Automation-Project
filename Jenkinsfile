@@ -47,17 +47,15 @@ pipeline {
             steps {
                 script {
                     echo "Installing npm dependencies..."
-                    bat '''
-                        npm cache clean --force
-                        if exist node_modules rmdir /s /q node_modules
-                        if exist package-lock.json del package-lock.json
-                        npm install --force
-                    '''
+                    bat 'npm cache clean --force'
+                    bat 'if exist node_modules rmdir /s /q node_modules'
+                    bat 'if exist package-lock.json del package-lock.json'
+                    bat 'npm install --force'
                     echo "Dependencies installed successfully"
                 }
             }
         }
-        
+
         stage('Install Playwright Browsers') {
             steps {
                 script {
@@ -67,30 +65,26 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Run Tests') {
             environment {
-                // Use Jenkins credentials for test credentials
                 TEST_USERNAME = credentials('test-username')
                 TEST_PASSWORD = credentials('test-password')
             }
             steps {
                 script {
                     echo "Running Playwright tests..."
-                    bat 'npm test'
+                    bat 'npx playwright test'  // Changed from 'npm test'
                 }
             }
             post {
                 always {
-                    // Publish HTML test report
                     publishHTML([
                         reportDir: 'playwright-report',
                         reportFiles: 'index.html',
                         reportName: 'Playwright Test Report',
                         keepAll: true
                     ])
-                    
-                    // Archive test results
                     archiveArtifacts artifacts: 'test-results/**/*', allowEmptyArchive: true
                     archiveArtifacts artifacts: 'playwright-report/**/*', allowEmptyArchive: true
                 }
