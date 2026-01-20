@@ -38,7 +38,7 @@ A comprehensive end-to-end test automation framework for Advantage Online Shoppi
 
 # Run all tests
 npm test
-
+ 
 # Run tests in headed mode (visible browser)
 npm run test:headed
 
