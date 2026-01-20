@@ -47,7 +47,7 @@ pipeline {
             steps {
                 script {
                     echo "Installing npm dependencies..."
-                    bat 'npm ci'
+                    bat 'npm install'
                     echo "Dependencies installed successfully"
                 }
             }
