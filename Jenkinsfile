@@ -47,24 +47,19 @@ pipeline {
             steps {
                 script {
                     echo "Installing npm dependencies..."
+                    // Check npm and node versions
+                    bat 'npm --version'
+                    bat 'node --version'
+                    // More thorough cache clean
                     bat 'npm cache clean --force'
                     bat 'if exist node_modules rmdir /s /q node_modules'
                     bat 'if exist package-lock.json del package-lock.json'
-                    // Show package.json to verify it's correct
-                    bat 'type package.json | findstr playwright'
-                    // Install from package.json (this should work)
-                    bat 'npm install'
-                    // Verify installation - check for actual files, not just directory
-                    bat '''
-                        if exist node_modules\\@playwright\\test\\package.json (
-                            echo SUCCESS: @playwright/test package.json exists
-                            type node_modules\\@playwright\\test\\package.json | findstr version
-                        ) else (
-                            echo ERROR: @playwright/test package.json NOT found
-                            dir node_modules\\@playwright 2>nul
-                            exit /b 1
-                        )
-                    '''
+                    // Check npm config
+                    bat 'npm config list'
+                    // Try installing with verbose output to see what's happening
+                    bat 'npm install --verbose 2>&1'
+                    // Verify
+                    bat 'if exist node_modules\\@playwright\\test\\package.json (echo SUCCESS) else (echo ERROR && dir node_modules 2>nul && exit /b 1)'
                     echo "Dependencies installed successfully"
                 }
             }
