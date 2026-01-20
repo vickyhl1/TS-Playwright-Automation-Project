@@ -48,12 +48,13 @@ pipeline {
                 script {
                     echo "Installing npm dependencies..."
                     bat 'npm cache clean --force'
+                    bat 'npm config get registry'
                     bat 'if exist node_modules rmdir /s /q node_modules'
                     bat 'if exist package-lock.json del package-lock.json'
-                    // Install from package.json
-                    bat 'npm install'
+                    // Try with explicit registry
+                    bat 'npm install @playwright/test@1.57.0 --save-dev --registry https://registry.npmjs.org/'
                     // Verify
-                    bat 'if exist node_modules\\@playwright\\test\\package.json (echo SUCCESS) else (echo ERROR && exit /b 1)'
+                    bat 'dir node_modules\\@playwright\\test 2>nul || exit /b 1'
                     echo "Dependencies installed successfully"
                 }
             }
