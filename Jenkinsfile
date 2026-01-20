@@ -53,7 +53,6 @@ pipeline {
                     // More thorough cache clean
                     bat 'npm cache clean --force'
                     bat 'if exist node_modules rmdir /s /q node_modules'
-                    bat 'if exist package-lock.json del package-lock.json'
                     // Check npm config
                     bat 'npm config list'
                     // Try installing with verbose output to see what's happening
