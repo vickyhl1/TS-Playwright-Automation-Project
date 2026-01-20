@@ -34,8 +34,9 @@ pipeline {
                 script {
                     echo "Checking out code from repository..."
                     checkout scm
-                    sh 'git rev-parse --short HEAD > .git/commit-id'
-                    def commitId = readFile('.git/commit-id').trim()
+                    // Windows-compatible git commit ID extraction
+                    bat 'git rev-parse --short HEAD > commit-id.txt'
+                    def commitId = readFile('commit-id.txt').trim()
                     env.GIT_COMMIT_SHORT = commitId
                     echo "Building commit: ${commitId}"
                 }
@@ -46,7 +47,7 @@ pipeline {
             steps {
                 script {
                     echo "Installing npm dependencies..."
-                    sh 'npm ci'
+                    bat 'npm ci'
                     echo "Dependencies installed successfully"
                 }
             }
@@ -56,7 +57,7 @@ pipeline {
             steps {
                 script {
                     echo "Installing Playwright browsers..."
-                    sh 'npx playwright install --with-deps chromium'
+                    bat 'npx playwright install --with-deps chromium'
                     echo "Playwright browsers installed successfully"
                 }
             }
@@ -71,7 +72,7 @@ pipeline {
             steps {
                 script {
                     echo "Running Playwright tests..."
-                    sh 'npm test'
+                    bat 'npm test'
                 }
             }
             post {
@@ -105,7 +106,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker image..."
-                    sh """
+                    bat """
                         docker build -t ${IMAGE_TAG_VERSION} .
                         docker tag ${IMAGE_TAG_VERSION} ${IMAGE_TAG_LATEST}
                     """
@@ -127,11 +128,14 @@ pipeline {
                         passwordVariable: 'DOCKER_PASS'
                     )]) {
                         echo "Logging into Docker registry..."
-                        sh "echo ${DOCKER_PASS} | docker login ${DOCKER_REGISTRY} -u ${DOCKER_USER} --password-stdin"
+                        // Windows-compatible Docker login
+                        bat """
+                            echo %DOCKER_PASS% | docker login %DOCKER_REGISTRY% -u %DOCKER_USER% --password-stdin
+                        """
                         
                         echo "Pushing Docker images..."
-                        sh "docker push ${IMAGE_TAG_VERSION}"
-                        sh "docker push ${IMAGE_TAG_LATEST}"
+                        bat "docker push ${IMAGE_TAG_VERSION}"
+                        bat "docker push ${IMAGE_TAG_LATEST}"
                         
                         echo "✅ Images pushed successfully:"
                         echo "   - ${IMAGE_TAG_VERSION}"
