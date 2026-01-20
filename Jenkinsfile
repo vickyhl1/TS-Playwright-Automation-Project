@@ -50,7 +50,11 @@ pipeline {
                     bat 'npm cache clean --force'
                     bat 'if exist node_modules rmdir /s /q node_modules'
                     bat 'if exist package-lock.json del package-lock.json'
-                    bat 'npm install --force'
+                    // Install packages explicitly
+                    bat 'npm install @playwright/test@1.57.0 --save-dev'
+                    bat 'npm install @types/node@^20.14.0 --save-dev'
+                    bat 'npm install dotenv@^17.2.3 --save-dev'
+                    bat 'npm install typescript@^5.9.3 --save-dev'
                     echo "Dependencies installed successfully"
                 }
             }
