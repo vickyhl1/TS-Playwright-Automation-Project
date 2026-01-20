@@ -48,9 +48,10 @@ pipeline {
                 script {
                     echo "Installing npm dependencies..."
                     bat '''
+                        npm cache clean --force
                         if exist node_modules rmdir /s /q node_modules
                         if exist package-lock.json del package-lock.json
-                        npm install @playwright/test @types/node dotenv typescript --save-dev
+                        npm install --force
                     '''
                     echo "Dependencies installed successfully"
                 }
@@ -58,14 +59,10 @@ pipeline {
         }
         
         stage('Install Playwright Browsers') {
-            environment {
-                TEST_USERNAME = credentials('test-username')
-                TEST_PASSWORD = credentials('test-password')
-            }
             steps {
                 script {
                     echo "Installing Playwright browsers..."
-                    bat 'npx playwright test'
+                    bat 'npx playwright install --with-deps chromium'
                     echo "Playwright browsers installed successfully"
                 }
             }
