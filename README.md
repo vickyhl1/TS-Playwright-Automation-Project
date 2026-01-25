@@ -34,7 +34,7 @@ A comprehensive end-to-end test automation framework for Advantage Online Shoppi
 - ✅ Categories API: Retrieve product categories
 - ✅ Login API: SOAP-based authentication with JWT token validation
 
-## 🏃 Running Tests
+## 🏃 Running Tests 
 
 # Run all tests
 npm test
